@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>旅のしおり</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;600&display=swap');
+</style>
+<style id="leaflet-css-placeholder"></style>
+<script>
+(function(){
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';
+  link.setAttribute('crossorigin','anonymous');
+  document.head.appendChild(link);
+})();
+</script>
+<style>
+:root{
+  --cream:#fdf6e3;--cream2:#f5e9c8;--brown:#7a4810;--brown-light:#b07840;
+  --brown-dark:#4a2800;--terra:#b04010;--green:#4a7040;--green-light:#e8f0e0;
+  --orange:#e07820;--gray:#888;--text:#2a1800;--border:#d4b880;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--cream);color:var(--text);font-size:14px;line-height:1.7;}
+
+.cover{background:var(--brown);color:var(--cream);padding:2rem 2rem 1.8rem;text-align:center;position:relative;overflow:hidden;}
+.cover::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(255,255,255,0.03) 20px,rgba(255,255,255,0.03) 40px);}
+.cover-inner{position:relative;z-index:1;}
+.cover-icon{font-size:2.2rem;margin-bottom:0.4rem;}
+.cover h1{font-family:'Noto Serif JP',serif;font-size:1.7rem;font-weight:600;letter-spacing:0.1em;margin-bottom:0.2rem;}
+.cover-sub{font-size:0.88rem;opacity:0.8;margin-bottom:0.8rem;}
+.cover-meta{display:flex;justify-content:center;gap:1.2rem;font-size:0.8rem;opacity:0.9;flex-wrap:wrap;}
+
+.nav-tabs{display:flex;background:var(--brown-dark);overflow-x:auto;scrollbar-width:none;}
+.nav-tabs::-webkit-scrollbar{display:none;}
+.tab-btn{flex:1;min-width:72px;padding:0.65rem 0.4rem;background:none;border:none;color:rgba(255,255,255,0.6);font-family:'Noto Sans JP',sans-serif;font-size:0.75rem;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;white-space:nowrap;}
+.tab-btn.active{color:var(--cream);border-bottom-color:var(--orange);}
+.tab-btn:hover{color:var(--cream);}
+
+.section{display:none;padding:1rem;}
+.section.active{display:block;}
+
+.card{background:white;border:1px solid var(--border);border-radius:10px;padding:0.9rem 1rem;margin-bottom:0.8rem;}
+.card-title{font-size:0.8rem;font-weight:700;color:var(--brown);letter-spacing:0.06em;margin-bottom:0.6rem;display:flex;align-items:center;gap:0.4rem;}
+
+/* TOP BAR */
+.top-bar{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.8rem;flex-wrap:wrap;}
+.top-bar-left{display:flex;gap:0.5rem;flex:1;}
+.print-btn{display:flex;align-items:center;gap:0.4rem;background:var(--brown);color:var(--cream);border:none;border-radius:20px;padding:0.38rem 0.9rem;font-size:0.76rem;cursor:pointer;font-family:'Noto Sans JP',sans-serif;white-space:nowrap;}
+.print-btn:hover{background:var(--brown-dark);}
+.edit-toggle{display:flex;align-items:center;gap:0.4rem;background:var(--cream2);border:1px solid var(--border);border-radius:20px;padding:0.38rem 0.9rem;font-size:0.76rem;cursor:pointer;color:var(--brown);font-family:'Noto Sans JP',sans-serif;white-space:nowrap;}
+.edit-toggle.on{background:var(--orange);color:white;border-color:var(--orange);}
+.edit-hint{font-size:0.72rem;color:var(--orange);background:#fff8ee;border:1px dashed var(--orange);border-radius:6px;padding:0.28rem 0.6rem;margin-bottom:0.7rem;display:none;}
+.edit-hint.show{display:block;}
+
+/* DAY */
+.day-header{display:flex;align-items:center;gap:0.7rem;margin:0.9rem 0 0.6rem;}
+.day-badge{background:var(--brown);color:var(--cream);border-radius:20px;padding:0.22rem 0.8rem;font-size:0.76rem;font-weight:700;white-space:nowrap;}
+.day-badge.d2{background:var(--terra);}
+.day-badge.d3{background:var(--green);}
+.day-line{flex:1;height:1px;background:var(--border);}
+
+/* TIMELINE */
+.timeline{position:relative;padding-left:1.3rem;}
+.timeline::before{content:'';position:absolute;left:5px;top:8px;bottom:8px;width:1px;background:var(--border);}
+.tl-item{position:relative;margin-bottom:0.85rem;}
+.tl-dot{position:absolute;left:-1.3rem;top:5px;width:11px;height:11px;border-radius:50%;background:var(--brown-light);border:2px solid white;box-shadow:0 0 0 1px var(--border);}
+.tl-dot.main{background:var(--terra);width:13px;height:13px;top:4px;left:-1.35rem;}
+.tl-dot.sub{background:var(--gray);}
+.tl-time{font-size:0.73rem;color:var(--gray);font-weight:500;}
+.tl-title{font-size:0.88rem;font-weight:700;color:var(--text);}
+.tl-desc{font-size:0.78rem;color:#555;margin-top:0.05rem;}
+.tl-note{font-size:0.74rem;color:var(--terra);background:#fff5f0;border-left:2px solid var(--terra);padding:0.2rem 0.5rem;margin-top:0.25rem;border-radius:0 4px 4px 0;}
+.tl-info{font-size:0.74rem;color:var(--green);background:var(--green-light);border-left:2px solid var(--green);padding:0.2rem 0.5rem;margin-top:0.25rem;border-radius:0 4px 4px 0;}
+.transport{display:inline-flex;align-items:center;gap:0.3rem;font-size:0.7rem;background:var(--cream2);border:1px solid var(--border);border-radius:20px;padding:0.08rem 0.55rem;margin:0.2rem 0;color:var(--brown);}
+.star{color:var(--orange);}
+
+/* EDIT COMMON */
+[contenteditable="true"]{cursor:text;border-bottom:1px dashed var(--border);outline:none;min-width:30px;display:inline-block;}
+[contenteditable="true"]:focus{background:#fffbe8;border-bottom:2px solid var(--orange);}
+.del-btn{position:absolute;right:-0.3rem;top:1px;background:none;border:none;color:#ddd;cursor:pointer;font-size:0.82rem;display:none;}
+.editing .del-btn{display:block;}
+.del-btn:hover{color:var(--terra);}
+.add-btn{display:flex;align-items:center;gap:0.4rem;background:none;border:1px dashed var(--border);border-radius:8px;padding:0.35rem 0.7rem;font-size:0.76rem;color:var(--brown-light);cursor:pointer;font-family:'Noto Sans JP',sans-serif;width:100%;justify-content:center;margin-top:0.2rem;display:none;}
+.editing-active .add-btn{display:flex;}
+.add-btn:hover{background:var(--cream2);}
+
+/* HOTEL EDIT */
+.hotel-card{background:white;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:0.8rem;}
+.hotel-header{background:var(--brown);color:var(--cream);padding:0.55rem 1rem;font-size:0.8rem;font-weight:700;display:flex;justify-content:space-between;align-items:center;}
+.hotel-body{padding:0.85rem 1rem;}
+.info-row{display:flex;gap:0.5rem;margin-bottom:0.38rem;font-size:0.8rem;align-items:flex-start;position:relative;}
+.info-label{color:var(--brown-light);font-weight:700;white-space:nowrap;min-width:65px;font-size:0.75rem;}
+.info-val{flex:1;}
+.info-row .del-btn{position:static;margin-left:auto;}
+
+/* CHECKLIST EDIT */
+.check-group{margin-bottom:0.75rem;}
+.check-group-title{font-size:0.76rem;font-weight:700;color:var(--brown);margin-bottom:0.35rem;display:flex;align-items:center;gap:0.4rem;position:relative;}
+.check-item{display:flex;align-items:center;gap:0.5rem;padding:0.28rem 0;border-bottom:1px dashed #eee;font-size:0.8rem;position:relative;}
+.check-item:last-child{border-bottom:none;}
+.check-item input[type="checkbox"]{accent-color:var(--brown);width:14px;height:14px;cursor:pointer;flex-shrink:0;}
+.check-item.checked label{text-decoration:line-through;color:var(--gray);}
+.check-item label{flex:1;cursor:pointer;}
+.check-item .del-btn{position:static;}
+
+/* CONTACT EDIT */
+.emg-item{display:flex;justify-content:space-between;align-items:center;padding:0.45rem 0;border-bottom:1px dashed #eee;font-size:0.8rem;gap:0.5rem;position:relative;}
+.emg-item:last-child{border-bottom:none;}
+.emg-label-s{color:var(--gray);font-size:0.73rem;}
+.emg-val{font-weight:700;color:var(--brown-dark);}
+.emg-item .del-btn{position:static;}
+
+/* MAP */
+#map{height:300px;border-radius:10px;border:1px solid var(--border);}
+.map-legend{display:flex;gap:0.8rem;flex-wrap:wrap;margin-top:0.5rem;font-size:0.73rem;}
+.legend-item{display:flex;align-items:center;gap:0.3rem;}
+.legend-dot{width:9px;height:9px;border-radius:50%;}
+.gmap-links{display:flex;flex-direction:column;gap:0.45rem;margin-top:0.6rem;}
+.gmap-btn{display:flex;align-items:center;gap:0.6rem;padding:0.45rem 0.75rem;border:1px solid var(--border);border-radius:8px;background:white;font-size:0.78rem;color:var(--brown-dark);text-decoration:none;}
+.gmap-btn:hover{background:var(--cream2);}
+.gmap-day{font-size:0.68rem;color:var(--gray);margin-left:auto;}
+.route-item{display:flex;gap:0.5rem;align-items:center;padding:0.38rem 0;border-bottom:1px dashed #eee;flex-wrap:wrap;}
+.route-item:last-child{border-bottom:none;}
+.route-num{color:white;border-radius:50%;width:19px;height:19px;display:flex;align-items:center;justify-content:center;font-size:0.62rem;flex-shrink:0;}
+
+/* MEMO */
+.memo-area{width:100%;min-height:90px;border:1px solid var(--border);border-radius:8px;padding:0.6rem;font-family:'Noto Sans JP',sans-serif;font-size:0.8rem;color:var(--text);background:white;resize:vertical;}
+
+@media print{
+  .nav-tabs,.top-bar,.add-btn,.del-btn,.edit-hint{display:none!important;}
+  .section{display:block!important;}
+  body{background:white;}
+  .cover{background:#4a2800!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  #map{height:220px;}
+  .card,.hotel-card{break-inside:avoid;}
+}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-inner">
+    <div class="cover-icon" contenteditable="false">🗺️</div>
+    <h1 contenteditable="false">旅のしおり</h1>
+    <div class="cover-sub" contenteditable="false">京都ドライブ旅 2025</div>
+    <div class="cover-meta" id="cover-meta">
+      <span contenteditable="false">📅 6月6日（土）〜 6月8日（月）</span>
+      <span contenteditable="false">🚗 神戸垂水 発</span>
+      <span contenteditable="false">👨‍👩‍👦 大人2名＋子ども1名</span>
+    </div>
+    <div style="position:absolute;top:0.7rem;right:0.8rem;z-index:2;">
+      <button class="edit-toggle" id="et-cover" onclick="toggleEdit('cover')" style="background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.3);color:white;font-size:0.72rem;padding:0.28rem 0.7rem;">✏️ 編集</button>
+    </div>
+  </div>
+</div>
+
+<div class="nav-tabs">
+  <button class="tab-btn active" onclick="showTab('schedule',this)">📋 日程</button>
+  <button class="tab-btn" onclick="showTab('map',this)">🗺️ 地図</button>
+  <button class="tab-btn" onclick="showTab('hotel',this)">🏨 宿泊</button>
+  <button class="tab-btn" onclick="showTab('checklist',this)">☑️ 持ち物</button>
+  <button class="tab-btn" onclick="showTab('info',this)">📞 連絡先</button>
+  <button class="tab-btn" onclick="showTab('memo',this)">📝 メモ</button>
+</div>
+
+<!-- ===== SCHEDULE ===== -->
+<div id="tab-schedule" class="section active">
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <button class="print-btn" onclick="window.print()">🖨️ 印刷</button>
+      <button class="edit-toggle" id="et-schedule" onclick="toggleEdit('schedule')">✏️ 編集</button>
+    </div>
+  </div>
+  <div class="edit-hint" id="eh-schedule">タイトル・時間・説明をタップして編集 ／ ＋で追加 ／ 🗑️で削除</div>
+
+  <div class="day-header"><span class="day-badge">1日目 6/6（土）</span><div class="day-line"></div><span style="font-size:0.73rem;color:var(--gray);">移動・チェックイン</span></div>
+  <div class="card editing-active" id="card-day1">
+    <div class="timeline" id="tl-day1">
+      <div class="tl-item">
+        <div class="tl-dot sub"></div><button class="del-btn" onclick="delItem(this)">🗑️</button>
+        <div class="tl-time">夕方（17:00〜18:00頃）</div>
+        <div class="tl-title">🚗 神戸・垂水（自宅）を出発</div>
+        <div class="tl-desc">自家用車にて出発</div>
+        <div class="transport">🚗 自家用車 ／ 約60〜90分</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot main"></div><button class="del-btn" onclick="delItem(this)">🗑️</button>
+        <div class="tl-time">19:00〜20:00</div>
+        <div class="tl-title">🍽️ 烏丸・四条エリアでディナー</div>
+        <div class="tl-desc">ホテルマイステイズ京都四条 周辺のレストランで夕食</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot main"></div><button class="del-btn" onclick="delItem(this)">🗑️</button>
+        <div class="tl-time">20:00（22:00厳守）</div>
+        <div class="tl-title">🏨 ホテルマイステイズ京都四条 チェックイン</div>
+        <div class="tl-desc">四条通油小路・烏丸エリア</div>
+        <div class="tl-note">⚠️ チェックイン22:00厳守 ／ 駐車場満車時は周辺コインパーキング利用</div>
+      </div>
+    </div>
+    <button class="add-btn" onclick="addTlItem('tl-day1')">＋ 項目を追加</button>
+  </div>
+
+  <div class="day-header"><span class="day-badge d2">2日目 6/7（日）</span><div class="day-line"></div><span style="font-size:0.73rem;color:var(--gray);">美術館・Nintendo KYOTO・1人帰宅</span></div>
+  <div class="card editing-active" id="card-day2">
+    <div class="timeline" id="tl-day2">
+      <div class="tl-item">
+        <div class="tl-dot"></div><button class="del-btn" onclick="delItem(this)">🗑️</button>
+        <div class="tl-time">〜11:00頃</div>
+        <div class="tl-title">🏨 ホテルマイステイズ京都四条 チェックアウト</div>
+        <div class="tl-desc">車をホテルモントレ京都へ移動・駐車し、荷物を預ける</div>
+        <div class="tl-info">💡 ホテルモントレ京都から市内は公共交通機関 or 徒歩で移動</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot main"></div><button class="del-btn" onclick="delItem(this)">🗑️</button>
+        <div class="tl-time">午前〜昼</div>
+        <div class="tl-title">🎨 イベント①：京都市京セラ美術館「どろぼう展」</div>
+        <div class="tl-desc">岡崎エリア</div>
+        <div class="transport">🚌 ホテルモントレ京都から市バス or 徒歩</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot main"></div><button class="del-btn" onclick="delItem(this)">🗑️</button>
+        <div class="tl-time">昼〜午後</div>
+        <div class="tl-title"><span class="star">★</span> イベント②：Nintendo KYOTO（京都髙島屋S.C. T8 7F）</div>
+        <div class="tl-desc">四条河原町エリア</div>
+        <div class="transport">🚶 京セラ美術館 → 四条河原町（徒歩 or バス）</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot main"></div><button class="del-btn" onclick="delItem(this)">🗑️</button>
+        <div class="tl-time">15:00〜</div>
+        <div class="tl-title">🏨 ホテルモントレ京都 チェックイン</div>
+        <div class="tl-desc">烏丸通三条エリア</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot main"></div><button class="del-btn" onclick="delItem(this)">🗑️</button>
+        <div class="tl-time">夕方</div>
+        <div class="tl-title">🚄 イベント③：京都駅から1人帰宅</div>
+        <div class="tl-desc">ホテルモントレ京都 → 京都駅 → 新幹線 or 電車で先行帰宅</div>
+        <div class="tl-note">👋 残る2人はホテルモントレ京都に宿泊</div>
+      </div>
+    </div>
+    <button class="add-btn" onclick="addTlItem('tl-day2')">＋ 項目を追加</button>
+  </div>
+
+  <div class="day-header"><span class="day-badge d3">3日目 6/8（月）</span><div class="day-line"></div><span style="font-size:0.73rem;color:var(--gray);">ニンテンドーミュージアム・帰路</span></div>
+  <div class="card editing-active" id="card-day3">
+    <div class="timeline" id="tl-day3">
+      <div class="tl-item">
+        <div class="tl-dot"></div><button class="del-btn" onclick="delItem(this)">🗑️</button>
+        <div class="tl-time">〜12:00</div>
+        <div class="tl-title">🏨 ホテルモントレ京都 チェックアウト</div>
+        <div class="tl-desc">チェックアウト後、車でニンテンドーミュージアム（宇治・小倉町）へ</div>
+        <div class="transport">🚗 ホテルモントレ京都 → ニンテンドーミュージアム ／ 約30〜40分</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot sub"></div><button class="del-btn" onclick="delItem(this)">🗑️</button>
+        <div class="tl-time">到着後すぐ</div>
+        <div class="tl-title">🅿️ 京光製作所裏駐車場（akippa予約済み）に駐車</div>
+        <div class="tl-desc">ニンテンドーミュージアムまで徒歩圏内</div>
+        <div class="tl-note">⚠️ 東側スペース・前向き駐車必須！</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot main"></div><button class="del-btn" onclick="delItem(this)">🗑️</button>
+        <div class="tl-time">11:30〜（予約時間）</div>
+        <div class="tl-title"><span class="star">★★</span> イベント④：ニンテンドーミュージアム</div>
+        <div class="tl-desc">宇治市小倉町 ／ 本旅行のメインイベント！</div>
+        <div class="tl-info">🎮 予約時間：11:30〜 を厳守</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot sub"></div><button class="del-btn" onclick="delItem(this)">🗑️</button>
+        <div class="tl-time">午後（終了後）</div>
+        <div class="tl-title">🚗 ニンテンドーミュージアムから神戸・垂水（自宅）へ帰路</div>
+        <div class="tl-desc">お疲れさまでした！</div>
+        <div class="transport">🚗 ニンテンドーミュージアム → 神戸・垂水 ／ 約90〜120分</div>
+      </div>
+    </div>
+    <button class="add-btn" onclick="addTlItem('tl-day3')">＋ 項目を追加</button>
+  </div>
+</div>
+
+<!-- ===== MAP ===== -->
+<div id="tab-map" class="section">
+  <div class="card">
+    <div class="card-title">🗺️ 全体マップ・移動ルート</div>
+    <div id="map"></div>
+    <div class="map-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#7a4810"></div>1日目</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#b04010"></div>2日目</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#4a7040"></div>3日目</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#e07820"></div>宿泊先</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">📍 Google Maps で開く</div>
+    <div class="gmap-links">
+      <a class="gmap-btn" href="https://www.google.com/maps/search/?api=1&query=ホテルマイステイズ京都四条" target="_blank"><span>🏨 ホテルマイステイズ京都四条</span><span class="gmap-day">1日目 宿泊</span></a>
+      <a class="gmap-btn" href="https://www.google.com/maps/search/?api=1&query=京都市京セラ美術館" target="_blank"><span>🎨 京都市京セラ美術館</span><span class="gmap-day">2日目 どろぼう展</span></a>
+      <a class="gmap-btn" href="https://www.google.com/maps/search/?api=1&query=Nintendo+KYOTO+京都髙島屋" target="_blank"><span>🎮 Nintendo KYOTO（髙島屋T8 7F）</span><span class="gmap-day">2日目 ショップ</span></a>
+      <a class="gmap-btn" href="https://www.google.com/maps/search/?api=1&query=ホテルモントレ京都" target="_blank"><span>🏨 ホテルモントレ京都</span><span class="gmap-day">2日目 宿泊</span></a>
+      <a class="gmap-btn" href="https://www.google.com/maps/search/?api=1&query=京都駅" target="_blank"><span>🚄 京都駅</span><span class="gmap-day">2日目 帰宅出発点</span></a>
+      <a class="gmap-btn" href="https://www.google.com/maps/search/?api=1&query=ニンテンドーミュージアム+宇治" target="_blank"><span>⭐ ニンテンドーミュージアム</span><span class="gmap-day">3日目 メイン</span></a>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">🚗 移動ルート概要</div>
+    <div class="route-item"><span class="route-num" style="background:#7a4810;">1</span><span style="font-size:0.8rem;flex:1;">神戸・垂水（自宅）→ ホテルマイステイズ京都四条</span><span class="transport" style="margin:0;">🚗 約60〜90分</span></div>
+    <div class="route-item"><span class="route-num" style="background:#b04010;">2</span><span style="font-size:0.8rem;flex:1;">ホテルモントレ京都 → 京セラ美術館 → Nintendo KYOTO</span><span class="transport" style="margin:0;">🚶/🚌</span></div>
+    <div class="route-item"><span class="route-num" style="background:#4a7040;">3</span><span style="font-size:0.8rem;flex:1;">ホテルモントレ京都 → ニンテンドーミュージアム</span><span class="transport" style="margin:0;">🚗 約30〜40分</span></div>
+    <div class="route-item"><span class="route-num" style="background:#888;">4</span><span style="font-size:0.8rem;flex:1;">ニンテンドーミュージアム → 神戸・垂水（自宅）</span><span class="transport" style="margin:0;">🚗 約90〜120分</span></div>
+  </div>
+</div>
+
+<!-- ===== HOTEL ===== -->
+<div id="tab-hotel" class="section">
+  <div class="top-bar">
+    <button class="edit-toggle" id="et-hotel" onclick="toggleEdit('hotel')">✏️ 編集</button>
+  </div>
+  <div class="edit-hint" id="eh-hotel">各項目をタップして編集 ／ ＋で行を追加 ／ 🗑️で削除</div>
+
+  <div class="hotel-card" id="hotel1">
+    <div class="hotel-header"><span>🌙 1泊目 — 6/6（土）</span><span style="font-size:0.7rem;opacity:0.8;">素泊まり</span></div>
+    <div class="hotel-body">
+      <div style="font-size:0.95rem;font-weight:700;margin-bottom:0.55rem;color:var(--brown-dark);" contenteditable="false">ホテルマイステイズ京都四条</div>
+      <div id="hotel1-rows">
+        <div class="info-row"><span class="info-label">📍 住所</span><span class="info-val" contenteditable="false">京都市下京区四条通油小路東入ル傘鉾町52</span><button class="del-btn" onclick="delItem(this)">🗑️</button></div>
+        <div class="info-row"><span class="info-label">🕗 CI</span><span class="info-val" contenteditable="false">20:00予定（<strong>22:00厳守</strong>）</span><button class="del-btn" onclick="delItem(this)">🗑️</button></div>
+        <div class="info-row"><span class="info-label">🅿️ 駐車場</span><span class="info-val" contenteditable="false">ホテル併設（台数少）／ 満車時は周辺コインパーキング</span><button class="del-btn" onclick="delItem(this)">🗑️</button></div>
+        <div class="info-row"><span class="info-label">📋 プラン</span><span class="info-val" contenteditable="false">素泊まり</span><button class="del-btn" onclick="delItem(this)">🗑️</button></div>
+      </div>
+      <button class="add-btn" onclick="addInfoRow('hotel1-rows')">＋ 項目を追加</button>
+    </div>
+  </div>
+
+  <div class="hotel-card" id="hotel2">
+    <div class="hotel-header" style="background:var(--terra);"><span>🌙 2泊目 — 6/7（日）</span><span style="font-size:0.7rem;opacity:0.8;">素泊まり</span></div>
+    <div class="hotel-body">
+      <div style="font-size:0.95rem;font-weight:700;margin-bottom:0.55rem;color:var(--brown-dark);" contenteditable="false">ホテルモントレ京都</div>
+      <div id="hotel2-rows">
+        <div class="info-row"><span class="info-label">📍 住所</span><span class="info-val" contenteditable="false">京都市中京区烏丸通三条下ル饅頭屋町604</span><button class="del-btn" onclick="delItem(this)">🗑️</button></div>
+        <div class="info-row"><span class="info-label">🕒 CI</span><span class="info-val" contenteditable="false">15:00〜</span><button class="del-btn" onclick="delItem(this)">🗑️</button></div>
+        <div class="info-row"><span class="info-label">🕛 CO</span><span class="info-val" contenteditable="false">〜12:00</span><button class="del-btn" onclick="delItem(this)">🗑️</button></div>
+        <div class="info-row"><span class="info-label">🅿️ 駐車場</span><span class="info-val" contenteditable="false">ホテル地下（先着順・有料）</span><button class="del-btn" onclick="delItem(this)">🗑️</button></div>
+        <div class="info-row"><span class="info-label">📋 プラン</span><span class="info-val" contenteditable="false">素泊まり</span><button class="del-btn" onclick="delItem(this)">🗑️</button></div>
+      </div>
+      <button class="add-btn" onclick="addInfoRow('hotel2-rows')">＋ 項目を追加</button>
+    </div>
+  </div>
+
+  <div class="card" style="border-left:3px solid var(--green);" id="parking-card">
+    <div class="card-title">🅿️ 3日目 予約済み駐車場</div>
+    <div style="font-size:0.88rem;font-weight:700;margin-bottom:0.45rem;color:var(--brown-dark);" contenteditable="false">京光製作所裏駐車場（akippa）</div>
+    <div id="parking-rows">
+      <div class="info-row"><span class="info-label">📍 エリア</span><span class="info-val" contenteditable="false">宇治市小倉町（ニンテンドーミュージアム徒歩圏内）</span><button class="del-btn" onclick="delItem(this)">🗑️</button></div>
+      <div class="info-row"><span class="info-label">📋 予約</span><span class="info-val" contenteditable="false">akippa にて予約済み</span><button class="del-btn" onclick="delItem(this)">🗑️</button></div>
+    </div>
+    <div style="background:#fff5f0;border-left:3px solid var(--terra);padding:0.4rem 0.6rem;border-radius:0 4px 4px 0;margin-top:0.4rem;font-size:0.76rem;color:var(--terra);" contenteditable="false">⚠️ <strong>東側スペースに前向き駐車必須！</strong></div>
+    <button class="add-btn" onclick="addInfoRow('parking-rows')">＋ 項目を追加</button>
+  </div>
+</div>
+
+<!-- ===== CHECKLIST ===== -->
+<div id="tab-checklist" class="section">
+  <div class="top-bar">
+    <button class="edit-toggle" id="et-checklist" onclick="toggleEdit('checklist')">✏️ 編集</button>
+  </div>
+  <div class="edit-hint" id="eh-checklist">ラベルをタップして編集 ／ ＋でアイテム追加 ／ 🗑️で削除</div>
+  <div class="card" id="checklist-card">
+    <div class="card-title">☑️ 持ち物チェックリスト</div>
+
+    <div class="check-group" id="cg-docs">
+      <div class="check-group-title">📄 必須書類・チケット類<button class="del-btn" onclick="delItem(this)" style="position:static;margin-left:auto;">🗑️</button></div>
+      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">運転免許証</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
+      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">ホテル予約確認メール・バウチャー</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
+      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">ニンテンドーミュージアム 予約QR</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
+      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">akippa 駐車場予約確認</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
+      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">新幹線・電車チケット（帰宅用・1人分）</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
+      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">どろぼう展 チケット（必要な場合）</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
+      <button class="add-btn" onclick="addCheckItem(this.parentElement)">＋ 追加</button>
+    </div>
+
+    <div class="check-group" id="cg-money">
+      <div class="check-group-title">💳 お金・支払い<button class="del-btn" onclick="delItem(this)" style="position:static;margin-left:auto;">🗑️</button></div>
+      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">現金（コインパーキング・細かい支払い用）</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
+      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">クレジットカード</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
+      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">ICカード（ICOCA等）</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
+      <button class="add-btn" onclick="addCheckItem(this.parentElement)">＋ 追加</button>
+    </div>
+
+    <div class="check-group" id="cg-digital">
+      <div class="check-group-title">📱 デジタル・電子機器<button class="del-btn" onclick="delItem(this)" style="position:static;margin-left:auto;">🗑️</button></div>
+      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">スマートフォン・充電器</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
+      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">モバイルバッテリー</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
+      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">カメラ・充電ケーブル</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
+      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">カーナビ・スマホホルダー</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
+      <button class="add-btn" onclick="addCheckItem(this.parentElement)">＋ 追加</button>
+    </div>
+
+    <div class="check-group" id="cg-clothes">
+      <div class="check-group-title">👕 衣類・日用品<button class="del-btn" onclick="delItem(this)" style="position:static;margin-left:auto;">🗑️</button></div>
+      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">着替え（2〜3日分）</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
+      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">洗面・歯ブラシセット</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
+      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">タオル</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
+      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">日焼け止め</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
+      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">折りたたみ傘・雨具</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
+      <button class="add-btn" onclick="addCheckItem(this.parentElement)">＋ 追加</button>
+    </div>
+
+    <div class="check-group" id="cg-kids">
+      <div class="check-group-title">👦 子ども用品<button class="del-btn" onclick="delItem(this)" style="position:static;margin-left:auto;">🗑️</button></div>
+      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">飲み物・おやつ（車内用）</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
+      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">常備薬・保険証</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
+      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">暇つぶしグッズ（本・ゲーム等）</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
+      <button class="add-btn" onclick="addCheckItem(this.parentElement)">＋ 追加</button>
+    </div>
+
+    <button class="add-btn" id="add-group-btn" onclick="addCheckGroup()">＋ グループを追加</button>
+  </div>
+</div>
+
+<!-- ===== INFO ===== -->
+<div id="tab-info" class="section">
+  <div class="top-bar">
+    <button class="edit-toggle" id="et-info" onclick="toggleEdit('info')">✏️ 編集</button>
+  </div>
+  <div class="edit-hint" id="eh-info">各項目をタップして編集 ／ ＋で行を追加 ／ 🗑️で削除</div>
+
+  <div class="card">
+    <div class="card-title">🏨 宿泊先電話番号</div>
+    <div id="info-hotel-rows">
+      <div class="emg-item"><div><div style="font-size:0.8rem;" contenteditable="false">ホテルマイステイズ京都四条</div><div class="emg-label-s" contenteditable="false">1泊目 / 6月6日</div></div><div class="emg-val" contenteditable="false">075-341-5353</div><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
+      <div class="emg-item"><div><div style="font-size:0.8rem;" contenteditable="false">ホテルモントレ京都</div><div class="emg-label-s" contenteditable="false">2泊目 / 6月7日</div></div><div class="emg-val" contenteditable="false">075-251-7111</div><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
+    </div>
+    <button class="add-btn" onclick="addEmgRow('info-hotel-rows')">＋ 追加</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🚗 緊急連絡先</div>
+    <div id="info-emg-rows">
+      <div class="emg-item"><div><div style="font-size:0.8rem;" contenteditable="false">JAF ロードサービス</div></div><div class="emg-val" contenteditable="false">0570-00-8139</div><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
+      <div class="emg-item"><div><div style="font-size:0.8rem;" contenteditable="false">警察（緊急）</div></div><div class="emg-val" contenteditable="false">110</div><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
+      <div class="emg-item"><div><div style="font-size:0.8rem;" contenteditable="false">救急・消防</div></div><div class="emg-val" contenteditable="false">119</div><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
+    </div>
+    <button class="add-btn" onclick="addEmgRow('info-emg-rows')">＋ 追加</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📍 主要スポット</div>
+    <div id="info-spot-rows">
+      <div class="emg-item"><div><div style="font-size:0.8rem;" contenteditable="false">京都市京セラ美術館</div><div class="emg-label-s" contenteditable="false">どろぼう展</div></div><div style="font-size:0.73rem;color:var(--brown);text-align:right;" contenteditable="false">左京区岡崎円勝寺町124</div><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
+      <div class="emg-item"><div><div style="font-size:0.8rem;" contenteditable="false">Nintendo KYOTO</div><div class="emg-label-s" contenteditable="false">髙島屋S.C. T8 7F</div></div><div style="font-size:0.73rem;color:var(--brown);text-align:right;" contenteditable="false">下京区四条通河原町西入真町52</div><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
+      <div class="emg-item"><div><div style="font-size:0.8rem;" contenteditable="false">ニンテンドーミュージアム</div><div class="emg-label-s" contenteditable="false">予約 11:30〜</div></div><div style="font-size:0.73rem;color:var(--brown);text-align:right;" contenteditable="false">宇治市小倉町神楽田56</div><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
+    </div>
+    <button class="add-btn" onclick="addEmgRow('info-spot-rows')">＋ 追加</button>
+  </div>
+</div>
+
+<!-- ===== MEMO ===== -->
+<div id="tab-memo" class="section">
+  <div class="top-bar">
+    <button class="edit-toggle" id="et-memo" onclick="toggleEdit('memo')">✏️ 編集</button>
+  </div>
+  <div class="edit-hint" id="eh-memo">メモ欄を自由に編集 ／ ＋でメモ欄を追加 ／ 🗑️で削除</div>
+  <div id="memo-container">
+    <div class="card memo-card" style="position:relative;">
+      <div class="card-title" contenteditable="false">📝 旅メモ</div>
+      <textarea class="memo-area" placeholder="自由にメモを入力してください..."></textarea>
+      <button class="del-btn" onclick="delItem(this)" style="position:absolute;top:0.6rem;right:0.6rem;">🗑️</button>
+    </div>
+    <div class="card memo-card" style="position:relative;">
+      <div class="card-title" contenteditable="false">🍽️ 食事メモ</div>
+      <textarea class="memo-area" style="min-height:75px;" placeholder="行きたいお店・ランチ・ディナーなど..."></textarea>
+      <button class="del-btn" onclick="delItem(this)" style="position:absolute;top:0.6rem;right:0.6rem;">🗑️</button>
+    </div>
+    <div class="card memo-card" style="position:relative;">
+      <div class="card-title" contenteditable="false">🛍️ おみやげリスト</div>
+      <textarea class="memo-area" style="min-height:75px;" placeholder="買いたいもの・渡す人など..."></textarea>
+      <button class="del-btn" onclick="delItem(this)" style="position:absolute;top:0.6rem;right:0.6rem;">🗑️</button>
+    </div>
+  </div>
+  <button class="add-btn" id="add-memo-btn" onclick="addMemoCard()">＋ メモ欄を追加</button>
+</div>
+
+<script>
+// --- TAB ---
+function showTab(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'map' && !window.mapInit) initMap();
+}
+
+// --- EDIT MODE per tab ---
+const editStates = {};
+function toggleEdit(tab) {
+  editStates[tab] = !editStates[tab];
+  const on = editStates[tab];
+  const btn = document.getElementById('et-' + tab);
+  const hint = document.getElementById('eh-' + tab);
+  btn.textContent = on ? '✅ 完了' : '✏️ 編集';
+  btn.classList.toggle('on', on);
+  if (hint) { hint.classList.toggle('show', on); }
+
+  if (tab === 'cover') {
+    document.querySelectorAll('.cover [contenteditable]').forEach(el => {
+      el.contentEditable = on ? 'true' : 'false';
+    });
+    return;
+  }
+
+  const section = document.getElementById('tab-' + tab);
+
+  // contenteditable
+  section.querySelectorAll('[contenteditable]').forEach(el => {
+    el.contentEditable = on ? 'true' : 'false';
+  });
+  // del buttons
+  section.querySelectorAll('.del-btn').forEach(b => b.style.display = on ? 'block' : 'none');
+  // add buttons
+  section.querySelectorAll('.add-btn').forEach(b => b.style.display = on ? 'flex' : 'none');
+  // editing class on timelines
+  section.querySelectorAll('.timeline').forEach(tl => tl.classList.toggle('editing', on));
+  // memo card-title
+  if (tab === 'memo') {
+    section.querySelectorAll('.card-title').forEach(el => el.contentEditable = on ? 'true' : 'false');
+  }
+}
+
+// --- DELETE ---
+function delItem(btn) {
+  const target = btn.closest('.tl-item, .info-row, .check-item, .check-group, .emg-item, .memo-card');
+  if (target && confirm('削除しますか？')) target.remove();
+}
+
+// --- ADD TIMELINE ITEM ---
+function addTlItem(tlId) {
+  const tl = document.getElementById(tlId);
+  const on = editStates['schedule'];
+  const item = document.createElement('div');
+  item.className = 'tl-item';
+  item.innerHTML = `<div class="tl-dot"></div><button class="del-btn" onclick="delItem(this)" style="display:${on?'block':'none'}">🗑️</button><div class="tl-time" contenteditable="${on}">時間</div><div class="tl-title" contenteditable="${on}">新しい項目</div><div class="tl-desc" contenteditable="${on}">説明を入力</div>`;
+  tl.appendChild(item);
+  item.querySelector('.tl-title').focus();
+}
+
+// --- ADD INFO ROW ---
+function addInfoRow(containerId) {
+  const c = document.getElementById(containerId);
+  const tab = c.closest('.section').id.replace('tab-','');
+  const on = editStates[tab];
+  const row = document.createElement('div');
+  row.className = 'info-row';
+  row.innerHTML = `<span class="info-label" contenteditable="${on}">項目</span><span class="info-val" contenteditable="${on}">内容</span><button class="del-btn" onclick="delItem(this)" style="position:static;display:${on?'block':'none'}">🗑️</button>`;
+  c.appendChild(row);
+  row.querySelector('.info-label').focus();
+}
+
+// --- ADD CHECK ITEM ---
+function addCheckItem(group) {
+  const tab = 'checklist'; const on = editStates[tab];
+  const addBtn = group.querySelector('.add-btn');
+  const item = document.createElement('div');
+  item.className = 'check-item';
+  item.innerHTML = `<input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="${on}">新しい項目</label><button class="del-btn" onclick="delItem(this)" style="position:static;display:${on?'block':'none'}">🗑️</button>`;
+  group.insertBefore(item, addBtn);
+  item.querySelector('label').focus();
+}
+
+// --- ADD CHECK GROUP ---
+function addCheckGroup() {
+  const on = editStates['checklist'];
+  const container = document.getElementById('checklist-card');
+  const addGroupBtn = document.getElementById('add-group-btn');
+  const group = document.createElement('div');
+  group.className = 'check-group';
+  group.innerHTML = `<div class="check-group-title" contenteditable="${on}">新しいグループ<button class="del-btn" onclick="delItem(this)" style="position:static;margin-left:auto;display:${on?'block':'none'}">🗑️</button></div><button class="add-btn" onclick="addCheckItem(this.parentElement)" style="display:${on?'flex':'none'}">＋ 追加</button>`;
+  container.insertBefore(group, addGroupBtn);
+  group.querySelector('.check-group-title').focus();
+}
+
+// --- ADD EMG ROW ---
+function addEmgRow(containerId) {
+  const c = document.getElementById(containerId);
+  const tab = 'info'; const on = editStates[tab];
+  const row = document.createElement('div');
+  row.className = 'emg-item';
+  row.innerHTML = `<div><div style="font-size:0.8rem;" contenteditable="${on}">名前</div><div class="emg-label-s" contenteditable="${on}">メモ</div></div><div class="emg-val" contenteditable="${on}">値</div><button class="del-btn" onclick="delItem(this)" style="position:static;display:${on?'block':'none'}">🗑️</button>`;
+  c.appendChild(row);
+  row.querySelector('[contenteditable]').focus();
+}
+
+// --- ADD MEMO CARD ---
+function addMemoCard() {
+  const on = editStates['memo'];
+  const container = document.getElementById('memo-container');
+  const card = document.createElement('div');
+  card.className = 'card memo-card';
+  card.style.position = 'relative';
+  card.innerHTML = `<div class="card-title" contenteditable="${on}">📝 新しいメモ</div><textarea class="memo-area" placeholder="メモを入力..."></textarea><button class="del-btn" onclick="delItem(this)" style="position:absolute;top:0.6rem;right:0.6rem;display:${on?'block':'none'}">🗑️</button>`;
+  container.appendChild(card);
+}
+
+// --- CHECKBOX ---
+function toggleCheck(cb) {
+  cb.closest('.check-item').classList.toggle('checked', cb.checked);
+}
+
+// --- MAP ---
+function initMap() {
+  window.mapInit = true;
+  const map = L.map('map').setView([34.98,135.73],10);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors'}).addTo(map);
+  const spots=[
+    {lat:34.6443,lng:135.0156,label:'神戸・垂水（出発地）',color:'#888',day:'出発地'},
+    {lat:35.0036,lng:135.7556,label:'ホテルマイステイズ京都四条',color:'#e07820',day:'1日目 宿泊'},
+    {lat:35.0114,lng:135.7824,label:'京都市京セラ美術館',color:'#b04010',day:'2日目 どろぼう展'},
+    {lat:35.0031,lng:135.7714,label:'Nintendo KYOTO（髙島屋T8 7F）',color:'#b04010',day:'2日目'},
+    {lat:35.0116,lng:135.7581,label:'ホテルモントレ京都',color:'#e07820',day:'2日目 宿泊'},
+    {lat:35.0066,lng:135.7540,label:'京都駅',color:'#888',day:'2日目 帰宅出発点'},
+    {lat:34.9380,lng:135.7014,label:'ニンテンドーミュージアム',color:'#4a7040',day:'3日目 メインイベント'},
+  ];
+  spots.forEach(s=>{
+    const icon=L.divIcon({html:`<div style="width:13px;height:13px;border-radius:50%;background:${s.color};border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.3)"></div>`,className:'',iconSize:[13,13],iconAnchor:[6,6]});
+    L.marker([s.lat,s.lng],{icon}).addTo(map).bindPopup(`<strong>${s.label}</strong><br><small>${s.day}</small>`);
+  });
+  L.polyline([[34.6443,135.0156],[35.0036,135.7556]],{color:'#7a4810',weight:2.5,dashArray:'6,4',opacity:0.7}).addTo(map);
+  L.polyline([[35.0036,135.7556],[35.0116,135.7581],[35.0114,135.7824],[35.0031,135.7714]],{color:'#b04010',weight:2,dashArray:'4,4',opacity:0.6}).addTo(map);
+  L.polyline([[35.0116,135.7581],[34.9380,135.7014],[34.6443,135.0156]],{color:'#4a7040',weight:2.5,dashArray:'6,4',opacity:0.7}).addTo(map);
+}
+</script>
+</body>
+</html>
