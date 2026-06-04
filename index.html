@@ -161,15 +161,13 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--cream);color:var(--t
     <div class="lock-attempts" id="lock-attempts"></div>
   </div>
 </div>
+
 <div class="cover">
-    <div class="cover-icon" contenteditable="false">🗺️</div>
-    <h1 contenteditable="false">旅のしおり</h1>
-    <div class="cover-sub" contenteditable="false">京都ドライブ旅 2025</div>
-    <div class="cover-meta" id="cover-meta">
-      <span contenteditable="false">📅 6月6日（土）〜 6月8日（月）</span>
-      <span contenteditable="false">🚗 神戸垂水 発</span>
-      <span contenteditable="false">👨‍👩‍👦 大人2名＋子ども1名</span>
-    </div>
+  <div class="cover-inner">
+    <div class="cover-icon" id="cover-icon" contenteditable="false"></div>
+    <h1 id="cover-title" contenteditable="false"></h1>
+    <div class="cover-sub" id="cover-sub" contenteditable="false"></div>
+    <div class="cover-meta" id="cover-meta"></div>
     <div style="position:absolute;top:0.7rem;right:0.8rem;z-index:2;">
       <button class="edit-toggle" id="et-cover" onclick="toggleEdit('cover')" style="background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.3);color:white;font-size:0.72rem;padding:0.28rem 0.7rem;">✏️ 編集</button>
     </div>
@@ -194,109 +192,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--cream);color:var(--t
     </div>
   </div>
   <div class="edit-hint" id="eh-schedule">タイトル・時間・説明をタップして編集 ／ ＋で追加 ／ 🗑️で削除</div>
-
-  <div class="day-header"><span class="day-badge">1日目 6/6（土）</span><div class="day-line"></div><span style="font-size:0.73rem;color:var(--gray);">移動・チェックイン</span></div>
-  <div class="card editing-active" id="card-day1">
-    <div class="timeline" id="tl-day1">
-      <div class="tl-item">
-        <div class="tl-dot sub"></div><button class="del-btn" onclick="delItem(this)">🗑️</button>
-        <div class="tl-time">夕方（17:00〜18:00頃）</div>
-        <div class="tl-title">🚗 神戸・垂水（自宅）を出発</div>
-        <div class="tl-desc">自家用車にて出発</div>
-        <div class="transport">🚗 自家用車 ／ 約60〜90分</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-dot main"></div><button class="del-btn" onclick="delItem(this)">🗑️</button>
-        <div class="tl-time">19:00〜20:00</div>
-        <div class="tl-title">🍽️ 烏丸・四条エリアでディナー</div>
-        <div class="tl-desc">ホテルマイステイズ京都四条 周辺のレストランで夕食</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-dot main"></div><button class="del-btn" onclick="delItem(this)">🗑️</button>
-        <div class="tl-time">20:00（22:00厳守）</div>
-        <div class="tl-title">🏨 ホテルマイステイズ京都四条 チェックイン</div>
-        <div class="tl-desc">四条通油小路・烏丸エリア</div>
-        <div class="tl-note">⚠️ チェックイン22:00厳守 ／ 駐車場満車時は周辺コインパーキング利用</div>
-      </div>
-    </div>
-    <button class="add-btn" onclick="addTlItem('tl-day1')">＋ 項目を追加</button>
-  </div>
-
-  <div class="day-header"><span class="day-badge d2">2日目 6/7（日）</span><div class="day-line"></div><span style="font-size:0.73rem;color:var(--gray);">美術館・Nintendo KYOTO・1人帰宅</span></div>
-  <div class="card editing-active" id="card-day2">
-    <div class="timeline" id="tl-day2">
-      <div class="tl-item">
-        <div class="tl-dot"></div><button class="del-btn" onclick="delItem(this)">🗑️</button>
-        <div class="tl-time">〜11:00頃</div>
-        <div class="tl-title">🏨 ホテルマイステイズ京都四条 チェックアウト</div>
-        <div class="tl-desc">車をホテルモントレ京都へ移動・駐車し、荷物を預ける</div>
-        <div class="tl-info">💡 ホテルモントレ京都から市内は公共交通機関 or 徒歩で移動</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-dot main"></div><button class="del-btn" onclick="delItem(this)">🗑️</button>
-        <div class="tl-time">午前〜昼</div>
-        <div class="tl-title">🎨 イベント①：京都市京セラ美術館「どろぼう展」</div>
-        <div class="tl-desc">岡崎エリア</div>
-        <div class="transport">🚌 ホテルモントレ京都から市バス or 徒歩</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-dot main"></div><button class="del-btn" onclick="delItem(this)">🗑️</button>
-        <div class="tl-time">昼〜午後</div>
-        <div class="tl-title"><span class="star">★</span> イベント②：Nintendo KYOTO（京都髙島屋S.C. T8 7F）</div>
-        <div class="tl-desc">四条河原町エリア</div>
-        <div class="transport">🚶 京セラ美術館 → 四条河原町（徒歩 or バス）</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-dot main"></div><button class="del-btn" onclick="delItem(this)">🗑️</button>
-        <div class="tl-time">15:00〜</div>
-        <div class="tl-title">🏨 ホテルモントレ京都 チェックイン</div>
-        <div class="tl-desc">烏丸通三条エリア</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-dot main"></div><button class="del-btn" onclick="delItem(this)">🗑️</button>
-        <div class="tl-time">夕方</div>
-        <div class="tl-title">🚄 イベント③：京都駅から1人帰宅</div>
-        <div class="tl-desc">ホテルモントレ京都 → 京都駅 → 新幹線 or 電車で先行帰宅</div>
-        <div class="tl-note">👋 残る2人はホテルモントレ京都に宿泊</div>
-      </div>
-    </div>
-    <button class="add-btn" onclick="addTlItem('tl-day2')">＋ 項目を追加</button>
-  </div>
-
-  <div class="day-header"><span class="day-badge d3">3日目 6/8（月）</span><div class="day-line"></div><span style="font-size:0.73rem;color:var(--gray);">ニンテンドーミュージアム・帰路</span></div>
-  <div class="card editing-active" id="card-day3">
-    <div class="timeline" id="tl-day3">
-      <div class="tl-item">
-        <div class="tl-dot"></div><button class="del-btn" onclick="delItem(this)">🗑️</button>
-        <div class="tl-time">〜12:00</div>
-        <div class="tl-title">🏨 ホテルモントレ京都 チェックアウト</div>
-        <div class="tl-desc">チェックアウト後、車でニンテンドーミュージアム（宇治・小倉町）へ</div>
-        <div class="transport">🚗 ホテルモントレ京都 → ニンテンドーミュージアム ／ 約30〜40分</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-dot sub"></div><button class="del-btn" onclick="delItem(this)">🗑️</button>
-        <div class="tl-time">到着後すぐ</div>
-        <div class="tl-title">🅿️ 京光製作所裏駐車場（akippa予約済み）に駐車</div>
-        <div class="tl-desc">ニンテンドーミュージアムまで徒歩圏内</div>
-        <div class="tl-note">⚠️ 東側スペース・前向き駐車必須！</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-dot main"></div><button class="del-btn" onclick="delItem(this)">🗑️</button>
-        <div class="tl-time">11:30〜（予約時間）</div>
-        <div class="tl-title"><span class="star">★★</span> イベント④：ニンテンドーミュージアム</div>
-        <div class="tl-desc">宇治市小倉町 ／ 本旅行のメインイベント！</div>
-        <div class="tl-info">🎮 予約時間：11:30〜 を厳守</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-dot sub"></div><button class="del-btn" onclick="delItem(this)">🗑️</button>
-        <div class="tl-time">午後（終了後）</div>
-        <div class="tl-title">🚗 ニンテンドーミュージアムから神戸・垂水（自宅）へ帰路</div>
-        <div class="tl-desc">お疲れさまでした！</div>
-        <div class="transport">🚗 ニンテンドーミュージアム → 神戸・垂水 ／ 約90〜120分</div>
-      </div>
-    </div>
-    <button class="add-btn" onclick="addTlItem('tl-day3')">＋ 項目を追加</button>
-  </div>
+  <div id="schedule-body"></div>
 </div>
 
 <!-- ===== MAP ===== -->
@@ -313,21 +209,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--cream);color:var(--t
   </div>
   <div class="card">
     <div class="card-title">📍 Google Maps で開く</div>
-    <div class="gmap-links">
-      <a class="gmap-btn" href="https://www.google.com/maps/search/?api=1&query=ホテルマイステイズ京都四条" target="_blank"><span>🏨 ホテルマイステイズ京都四条</span><span class="gmap-day">1日目 宿泊</span></a>
-      <a class="gmap-btn" href="https://www.google.com/maps/search/?api=1&query=京都市京セラ美術館" target="_blank"><span>🎨 京都市京セラ美術館</span><span class="gmap-day">2日目 どろぼう展</span></a>
-      <a class="gmap-btn" href="https://www.google.com/maps/search/?api=1&query=Nintendo+KYOTO+京都髙島屋" target="_blank"><span>🎮 Nintendo KYOTO（髙島屋T8 7F）</span><span class="gmap-day">2日目 ショップ</span></a>
-      <a class="gmap-btn" href="https://www.google.com/maps/search/?api=1&query=ホテルモントレ京都" target="_blank"><span>🏨 ホテルモントレ京都</span><span class="gmap-day">2日目 宿泊</span></a>
-      <a class="gmap-btn" href="https://www.google.com/maps/search/?api=1&query=京都駅" target="_blank"><span>🚄 京都駅</span><span class="gmap-day">2日目 帰宅出発点</span></a>
-      <a class="gmap-btn" href="https://www.google.com/maps/search/?api=1&query=ニンテンドーミュージアム+宇治" target="_blank"><span>⭐ ニンテンドーミュージアム</span><span class="gmap-day">3日目 メイン</span></a>
-    </div>
+    <div class="gmap-links" id="gmap-links"></div>
   </div>
   <div class="card">
     <div class="card-title">🚗 移動ルート概要</div>
-    <div class="route-item"><span class="route-num" style="background:#7a4810;">1</span><span style="font-size:0.8rem;flex:1;">神戸・垂水（自宅）→ ホテルマイステイズ京都四条</span><span class="transport" style="margin:0;">🚗 約60〜90分</span></div>
-    <div class="route-item"><span class="route-num" style="background:#b04010;">2</span><span style="font-size:0.8rem;flex:1;">ホテルモントレ京都 → 京セラ美術館 → Nintendo KYOTO</span><span class="transport" style="margin:0;">🚶/🚌</span></div>
-    <div class="route-item"><span class="route-num" style="background:#4a7040;">3</span><span style="font-size:0.8rem;flex:1;">ホテルモントレ京都 → ニンテンドーミュージアム</span><span class="transport" style="margin:0;">🚗 約30〜40分</span></div>
-    <div class="route-item"><span class="route-num" style="background:#888;">4</span><span style="font-size:0.8rem;flex:1;">ニンテンドーミュージアム → 神戸・垂水（自宅）</span><span class="transport" style="margin:0;">🚗 約90〜120分</span></div>
+    <div id="route-summary"></div>
   </div>
 </div>
 
@@ -337,46 +223,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--cream);color:var(--t
     <button class="edit-toggle" id="et-hotel" onclick="toggleEdit('hotel')">✏️ 編集</button>
   </div>
   <div class="edit-hint" id="eh-hotel">各項目をタップして編集 ／ ＋で行を追加 ／ 🗑️で削除</div>
-
-  <div class="hotel-card" id="hotel1">
-    <div class="hotel-header"><span>🌙 1泊目 — 6/6（土）</span><span style="font-size:0.7rem;opacity:0.8;">素泊まり</span></div>
-    <div class="hotel-body">
-      <div style="font-size:0.95rem;font-weight:700;margin-bottom:0.55rem;color:var(--brown-dark);" contenteditable="false">ホテルマイステイズ京都四条</div>
-      <div id="hotel1-rows">
-        <div class="info-row"><span class="info-label">📍 住所</span><span class="info-val" contenteditable="false">京都市下京区四条通油小路東入ル傘鉾町52</span><button class="del-btn" onclick="delItem(this)">🗑️</button></div>
-        <div class="info-row"><span class="info-label">🕗 CI</span><span class="info-val" contenteditable="false">20:00予定（<strong>22:00厳守</strong>）</span><button class="del-btn" onclick="delItem(this)">🗑️</button></div>
-        <div class="info-row"><span class="info-label">🅿️ 駐車場</span><span class="info-val" contenteditable="false">ホテル併設（台数少）／ 満車時は周辺コインパーキング</span><button class="del-btn" onclick="delItem(this)">🗑️</button></div>
-        <div class="info-row"><span class="info-label">📋 プラン</span><span class="info-val" contenteditable="false">素泊まり</span><button class="del-btn" onclick="delItem(this)">🗑️</button></div>
-      </div>
-      <button class="add-btn" onclick="addInfoRow('hotel1-rows')">＋ 項目を追加</button>
-    </div>
-  </div>
-
-  <div class="hotel-card" id="hotel2">
-    <div class="hotel-header" style="background:var(--terra);"><span>🌙 2泊目 — 6/7（日）</span><span style="font-size:0.7rem;opacity:0.8;">素泊まり</span></div>
-    <div class="hotel-body">
-      <div style="font-size:0.95rem;font-weight:700;margin-bottom:0.55rem;color:var(--brown-dark);" contenteditable="false">ホテルモントレ京都</div>
-      <div id="hotel2-rows">
-        <div class="info-row"><span class="info-label">📍 住所</span><span class="info-val" contenteditable="false">京都市中京区烏丸通三条下ル饅頭屋町604</span><button class="del-btn" onclick="delItem(this)">🗑️</button></div>
-        <div class="info-row"><span class="info-label">🕒 CI</span><span class="info-val" contenteditable="false">15:00〜</span><button class="del-btn" onclick="delItem(this)">🗑️</button></div>
-        <div class="info-row"><span class="info-label">🕛 CO</span><span class="info-val" contenteditable="false">〜12:00</span><button class="del-btn" onclick="delItem(this)">🗑️</button></div>
-        <div class="info-row"><span class="info-label">🅿️ 駐車場</span><span class="info-val" contenteditable="false">ホテル地下（先着順・有料）</span><button class="del-btn" onclick="delItem(this)">🗑️</button></div>
-        <div class="info-row"><span class="info-label">📋 プラン</span><span class="info-val" contenteditable="false">素泊まり</span><button class="del-btn" onclick="delItem(this)">🗑️</button></div>
-      </div>
-      <button class="add-btn" onclick="addInfoRow('hotel2-rows')">＋ 項目を追加</button>
-    </div>
-  </div>
-
-  <div class="card" style="border-left:3px solid var(--green);" id="parking-card">
-    <div class="card-title">🅿️ 3日目 予約済み駐車場</div>
-    <div style="font-size:0.88rem;font-weight:700;margin-bottom:0.45rem;color:var(--brown-dark);" contenteditable="false">京光製作所裏駐車場（akippa）</div>
-    <div id="parking-rows">
-      <div class="info-row"><span class="info-label">📍 エリア</span><span class="info-val" contenteditable="false">宇治市小倉町（ニンテンドーミュージアム徒歩圏内）</span><button class="del-btn" onclick="delItem(this)">🗑️</button></div>
-      <div class="info-row"><span class="info-label">📋 予約</span><span class="info-val" contenteditable="false">akippa にて予約済み</span><button class="del-btn" onclick="delItem(this)">🗑️</button></div>
-    </div>
-    <div style="background:#fff5f0;border-left:3px solid var(--terra);padding:0.4rem 0.6rem;border-radius:0 4px 4px 0;margin-top:0.4rem;font-size:0.76rem;color:var(--terra);" contenteditable="false">⚠️ <strong>東側スペースに前向き駐車必須！</strong></div>
-    <button class="add-btn" onclick="addInfoRow('parking-rows')">＋ 項目を追加</button>
-  </div>
+  <div id="hotel-body"></div>
 </div>
 
 <!-- ===== CHECKLIST ===== -->
@@ -387,53 +234,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--cream);color:var(--t
   <div class="edit-hint" id="eh-checklist">ラベルをタップして編集 ／ ＋でアイテム追加 ／ 🗑️で削除</div>
   <div class="card" id="checklist-card">
     <div class="card-title">☑️ 持ち物チェックリスト</div>
-
-    <div class="check-group" id="cg-docs">
-      <div class="check-group-title">📄 必須書類・チケット類<button class="del-btn" onclick="delItem(this)" style="position:static;margin-left:auto;">🗑️</button></div>
-      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">運転免許証</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
-      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">ホテル予約確認メール・バウチャー</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
-      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">ニンテンドーミュージアム 予約QR</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
-      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">akippa 駐車場予約確認</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
-      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">新幹線・電車チケット（帰宅用・1人分）</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
-      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">どろぼう展 チケット（必要な場合）</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
-      <button class="add-btn" onclick="addCheckItem(this.parentElement)">＋ 追加</button>
-    </div>
-
-    <div class="check-group" id="cg-money">
-      <div class="check-group-title">💳 お金・支払い<button class="del-btn" onclick="delItem(this)" style="position:static;margin-left:auto;">🗑️</button></div>
-      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">現金（コインパーキング・細かい支払い用）</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
-      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">クレジットカード</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
-      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">ICカード（ICOCA等）</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
-      <button class="add-btn" onclick="addCheckItem(this.parentElement)">＋ 追加</button>
-    </div>
-
-    <div class="check-group" id="cg-digital">
-      <div class="check-group-title">📱 デジタル・電子機器<button class="del-btn" onclick="delItem(this)" style="position:static;margin-left:auto;">🗑️</button></div>
-      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">スマートフォン・充電器</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
-      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">モバイルバッテリー</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
-      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">カメラ・充電ケーブル</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
-      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">カーナビ・スマホホルダー</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
-      <button class="add-btn" onclick="addCheckItem(this.parentElement)">＋ 追加</button>
-    </div>
-
-    <div class="check-group" id="cg-clothes">
-      <div class="check-group-title">👕 衣類・日用品<button class="del-btn" onclick="delItem(this)" style="position:static;margin-left:auto;">🗑️</button></div>
-      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">着替え（2〜3日分）</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
-      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">洗面・歯ブラシセット</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
-      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">タオル</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
-      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">日焼け止め</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
-      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">折りたたみ傘・雨具</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
-      <button class="add-btn" onclick="addCheckItem(this.parentElement)">＋ 追加</button>
-    </div>
-
-    <div class="check-group" id="cg-kids">
-      <div class="check-group-title">👦 子ども用品<button class="del-btn" onclick="delItem(this)" style="position:static;margin-left:auto;">🗑️</button></div>
-      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">飲み物・おやつ（車内用）</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
-      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">常備薬・保険証</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
-      <div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">暇つぶしグッズ（本・ゲーム等）</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
-      <button class="add-btn" onclick="addCheckItem(this.parentElement)">＋ 追加</button>
-    </div>
-
+    <div id="checklist-body"></div>
     <button class="add-btn" id="add-group-btn" onclick="addCheckGroup()">＋ グループを追加</button>
   </div>
 </div>
@@ -444,35 +245,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--cream);color:var(--t
     <button class="edit-toggle" id="et-info" onclick="toggleEdit('info')">✏️ 編集</button>
   </div>
   <div class="edit-hint" id="eh-info">各項目をタップして編集 ／ ＋で行を追加 ／ 🗑️で削除</div>
-
-  <div class="card">
-    <div class="card-title">🏨 宿泊先電話番号</div>
-    <div id="info-hotel-rows">
-      <div class="emg-item"><div><div style="font-size:0.8rem;" contenteditable="false">ホテルマイステイズ京都四条</div><div class="emg-label-s" contenteditable="false">1泊目 / 6月6日</div></div><div class="emg-val" contenteditable="false">075-341-5353</div><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
-      <div class="emg-item"><div><div style="font-size:0.8rem;" contenteditable="false">ホテルモントレ京都</div><div class="emg-label-s" contenteditable="false">2泊目 / 6月7日</div></div><div class="emg-val" contenteditable="false">075-251-7111</div><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
-    </div>
-    <button class="add-btn" onclick="addEmgRow('info-hotel-rows')">＋ 追加</button>
-  </div>
-
-  <div class="card">
-    <div class="card-title">🚗 緊急連絡先</div>
-    <div id="info-emg-rows">
-      <div class="emg-item"><div><div style="font-size:0.8rem;" contenteditable="false">JAF ロードサービス</div></div><div class="emg-val" contenteditable="false">0570-00-8139</div><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
-      <div class="emg-item"><div><div style="font-size:0.8rem;" contenteditable="false">警察（緊急）</div></div><div class="emg-val" contenteditable="false">110</div><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
-      <div class="emg-item"><div><div style="font-size:0.8rem;" contenteditable="false">救急・消防</div></div><div class="emg-val" contenteditable="false">119</div><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
-    </div>
-    <button class="add-btn" onclick="addEmgRow('info-emg-rows')">＋ 追加</button>
-  </div>
-
-  <div class="card">
-    <div class="card-title">📍 主要スポット</div>
-    <div id="info-spot-rows">
-      <div class="emg-item"><div><div style="font-size:0.8rem;" contenteditable="false">京都市京セラ美術館</div><div class="emg-label-s" contenteditable="false">どろぼう展</div></div><div style="font-size:0.73rem;color:var(--brown);text-align:right;" contenteditable="false">左京区岡崎円勝寺町124</div><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
-      <div class="emg-item"><div><div style="font-size:0.8rem;" contenteditable="false">Nintendo KYOTO</div><div class="emg-label-s" contenteditable="false">髙島屋S.C. T8 7F</div></div><div style="font-size:0.73rem;color:var(--brown);text-align:right;" contenteditable="false">下京区四条通河原町西入真町52</div><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
-      <div class="emg-item"><div><div style="font-size:0.8rem;" contenteditable="false">ニンテンドーミュージアム</div><div class="emg-label-s" contenteditable="false">予約 11:30〜</div></div><div style="font-size:0.73rem;color:var(--brown);text-align:right;" contenteditable="false">宇治市小倉町神楽田56</div><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>
-    </div>
-    <button class="add-btn" onclick="addEmgRow('info-spot-rows')">＋ 追加</button>
-  </div>
+  <div id="info-body"></div>
 </div>
 
 <!-- ===== MEMO ===== -->
@@ -501,7 +274,9 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--cream);color:var(--t
   <button class="add-btn" id="add-memo-btn" onclick="addMemoCard()">＋ メモ欄を追加</button>
 </div>
 
+<script src="data.js"></script>
 <script>
+// ===== AUTH =====
 const PASS_HASH = 'b5322326e9fc899bcfc0cfac731f0b987a3805fcfcb77409562abd6f02ac89be';
 const SALT = 'gotocoffee2025';
 let attempts = 0, lockUntil = 0;
@@ -528,10 +303,180 @@ async function unlock() {
     } else {
       document.getElementById('lock-error').textContent = `パスワードが違います（残り${5 - attempts}回）`;
     }
-    document.getElementById('lock-attempts').textContent = '';
   }
 }
 
+// ===== RENDER =====
+function renderAll() {
+  renderCover();
+  renderSchedule();
+  renderHotel();
+  renderChecklist();
+  renderInfo();
+  renderMap();
+}
+
+function renderCover() {
+  const d = TABINO_DATA.cover;
+  document.getElementById('cover-icon').textContent = d.icon;
+  document.getElementById('cover-title').textContent = d.title;
+  document.getElementById('cover-sub').textContent = d.subtitle;
+  const meta = document.getElementById('cover-meta');
+  meta.innerHTML = d.meta.map(m => `<span contenteditable="false">${m}</span>`).join('');
+}
+
+function renderSchedule() {
+  const body = document.getElementById('schedule-body');
+  body.innerHTML = '';
+  TABINO_DATA.schedule.days.forEach(day => {
+    const badgeClass = day.badge === 'd1' ? '' : day.badge === 'd2' ? ' d2' : ' d3';
+    const header = document.createElement('div');
+    header.className = 'day-header';
+    header.innerHTML = `<span class="day-badge${badgeClass}">${day.label}</span><div class="day-line"></div><span style="font-size:0.73rem;color:var(--gray);">${day.note}</span>`;
+    body.appendChild(header);
+
+    const card = document.createElement('div');
+    card.className = 'card editing-active';
+    card.id = day.cardId;
+
+    const tl = document.createElement('div');
+    tl.className = 'timeline';
+    tl.id = day.tlId;
+
+    day.items.forEach(item => {
+      tl.appendChild(makeTlItem(item));
+    });
+
+    card.appendChild(tl);
+    const addBtn = document.createElement('button');
+    addBtn.className = 'add-btn';
+    addBtn.onclick = () => addTlItem(day.tlId);
+    addBtn.textContent = '＋ 項目を追加';
+    card.appendChild(addBtn);
+    body.appendChild(card);
+  });
+}
+
+function makeTlItem(item) {
+  const div = document.createElement('div');
+  div.className = 'tl-item';
+  let html = `<div class="tl-dot${item.dot ? ' '+item.dot : ''}"></div>`;
+  html += `<button class="del-btn" onclick="delItem(this)">🗑️</button>`;
+  html += `<div class="tl-time" contenteditable="false">${item.time}</div>`;
+  html += `<div class="tl-title" contenteditable="false">${item.title}</div>`;
+  if (item.desc) html += `<div class="tl-desc" contenteditable="false">${item.desc}</div>`;
+  if (item.transport) html += `<div class="transport">${item.transport}</div>`;
+  if (item.note) html += `<div class="tl-note">${item.note}</div>`;
+  if (item.info) html += `<div class="tl-info">${item.info}</div>`;
+  div.innerHTML = html;
+  return div;
+}
+
+function renderHotel() {
+  const body = document.getElementById('hotel-body');
+  body.innerHTML = '';
+
+  TABINO_DATA.hotels.forEach(h => {
+    const card = document.createElement('div');
+    card.className = 'hotel-card';
+    card.id = h.id;
+    card.innerHTML = `
+      <div class="hotel-header" style="${h.headerStyle}">
+        <span>🌙 ${h.night}</span><span style="font-size:0.7rem;opacity:0.8;">${h.plan}</span>
+      </div>
+      <div class="hotel-body">
+        <div style="font-size:0.95rem;font-weight:700;margin-bottom:0.55rem;color:var(--brown-dark);" contenteditable="false">${h.name}</div>
+        <div id="${h.rowsId}">
+          ${h.rows.map(r => `<div class="info-row"><span class="info-label" contenteditable="false">${r.label}</span><span class="info-val" contenteditable="false">${r.val}</span><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>`).join('')}
+        </div>
+        <button class="add-btn" onclick="addInfoRow('${h.rowsId}')">＋ 項目を追加</button>
+      </div>`;
+    body.appendChild(card);
+  });
+
+  const p = TABINO_DATA.parking;
+  const pCard = document.createElement('div');
+  pCard.className = 'card';
+  pCard.style.cssText = 'border-left:3px solid var(--green);';
+  pCard.id = 'parking-card';
+  pCard.innerHTML = `
+    <div class="card-title">🅿️ 3日目 予約済み駐車場</div>
+    <div style="font-size:0.88rem;font-weight:700;margin-bottom:0.45rem;color:var(--brown-dark);" contenteditable="false">${p.name}</div>
+    <div id="${p.rowsId}">
+      ${p.rows.map(r => `<div class="info-row"><span class="info-label" contenteditable="false">${r.label}</span><span class="info-val" contenteditable="false">${r.val}</span><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>`).join('')}
+    </div>
+    <div style="background:#fff5f0;border-left:3px solid var(--terra);padding:0.4rem 0.6rem;border-radius:0 4px 4px 0;margin-top:0.4rem;font-size:0.76rem;color:var(--terra);" contenteditable="false">${p.warning}</div>
+    <button class="add-btn" onclick="addInfoRow('${p.rowsId}')">＋ 項目を追加</button>`;
+  body.appendChild(pCard);
+}
+
+function renderChecklist() {
+  const body = document.getElementById('checklist-body');
+  body.innerHTML = '';
+  TABINO_DATA.checklist.forEach(g => {
+    const group = document.createElement('div');
+    group.className = 'check-group';
+    group.id = g.id;
+    let html = `<div class="check-group-title">${g.title}<button class="del-btn" onclick="delItem(this)" style="position:static;margin-left:auto;">🗑️</button></div>`;
+    g.items.forEach(item => {
+      html += `<div class="check-item"><input type="checkbox" onchange="toggleCheck(this)"><label contenteditable="false">${item}</label><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>`;
+    });
+    html += `<button class="add-btn" onclick="addCheckItem(this.parentElement)">＋ 追加</button>`;
+    group.innerHTML = html;
+    body.appendChild(group);
+  });
+}
+
+function renderInfo() {
+  const body = document.getElementById('info-body');
+  const d = TABINO_DATA.info;
+
+  const hotelCard = document.createElement('div');
+  hotelCard.className = 'card';
+  hotelCard.innerHTML = `
+    <div class="card-title">🏨 宿泊先電話番号</div>
+    <div id="info-hotel-rows">
+      ${d.hotels.map(r => `<div class="emg-item"><div><div style="font-size:0.8rem;" contenteditable="false">${r.name}</div><div class="emg-label-s" contenteditable="false">${r.sub}</div></div><div class="emg-val" contenteditable="false">${r.val}</div><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>`).join('')}
+    </div>
+    <button class="add-btn" onclick="addEmgRow('info-hotel-rows')">＋ 追加</button>`;
+  body.appendChild(hotelCard);
+
+  const emgCard = document.createElement('div');
+  emgCard.className = 'card';
+  emgCard.innerHTML = `
+    <div class="card-title">🚗 緊急連絡先</div>
+    <div id="info-emg-rows">
+      ${d.emergency.map(r => `<div class="emg-item"><div><div style="font-size:0.8rem;" contenteditable="false">${r.name}</div></div><div class="emg-val" contenteditable="false">${r.val}</div><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>`).join('')}
+    </div>
+    <button class="add-btn" onclick="addEmgRow('info-emg-rows')">＋ 追加</button>`;
+  body.appendChild(emgCard);
+
+  const spotCard = document.createElement('div');
+  spotCard.className = 'card';
+  spotCard.innerHTML = `
+    <div class="card-title">📍 主要スポット</div>
+    <div id="info-spot-rows">
+      ${d.spots.map(r => `<div class="emg-item"><div><div style="font-size:0.8rem;" contenteditable="false">${r.name}</div><div class="emg-label-s" contenteditable="false">${r.sub}</div></div><div style="font-size:0.73rem;color:var(--brown);text-align:right;" contenteditable="false">${r.addr}</div><button class="del-btn" onclick="delItem(this)" style="position:static;">🗑️</button></div>`).join('')}
+    </div>
+    <button class="add-btn" onclick="addEmgRow('info-spot-rows')">＋ 追加</button>`;
+  body.appendChild(spotCard);
+}
+
+function renderMap() {
+  const d = TABINO_DATA.map;
+
+  const gmapLinks = document.getElementById('gmap-links');
+  gmapLinks.innerHTML = d.gmapLinks.map(l =>
+    `<a class="gmap-btn" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l.query)}" target="_blank"><span>${l.label}</span><span class="gmap-day">${l.day}</span></a>`
+  ).join('');
+
+  const routeSummary = document.getElementById('route-summary');
+  routeSummary.innerHTML = d.routeSummary.map(r =>
+    `<div class="route-item"><span class="route-num" style="background:${r.color};">${r.num}</span><span style="font-size:0.8rem;flex:1;">${r.text}</span><span class="transport" style="margin:0;">${r.transport}</span></div>`
+  ).join('');
+}
+
+// ===== TAB =====
 function showTab(id, btn) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -540,7 +485,7 @@ function showTab(id, btn) {
   if (id === 'map' && !window.mapInit) initMap();
 }
 
-// --- EDIT MODE per tab ---
+// ===== EDIT MODE per tab =====
 const editStates = {};
 function toggleEdit(tab) {
   editStates[tab] = !editStates[tab];
@@ -549,7 +494,7 @@ function toggleEdit(tab) {
   const hint = document.getElementById('eh-' + tab);
   btn.textContent = on ? '✅ 完了' : '✏️ 編集';
   btn.classList.toggle('on', on);
-  if (hint) { hint.classList.toggle('show', on); }
+  if (hint) hint.classList.toggle('show', on);
 
   if (tab === 'cover') {
     document.querySelectorAll('.cover [contenteditable]').forEach(el => {
@@ -559,30 +504,24 @@ function toggleEdit(tab) {
   }
 
   const section = document.getElementById('tab-' + tab);
-
-  // contenteditable
   section.querySelectorAll('[contenteditable]').forEach(el => {
     el.contentEditable = on ? 'true' : 'false';
   });
-  // del buttons
   section.querySelectorAll('.del-btn').forEach(b => b.style.display = on ? 'block' : 'none');
-  // add buttons
   section.querySelectorAll('.add-btn').forEach(b => b.style.display = on ? 'flex' : 'none');
-  // editing class on timelines
   section.querySelectorAll('.timeline').forEach(tl => tl.classList.toggle('editing', on));
-  // memo card-title
   if (tab === 'memo') {
     section.querySelectorAll('.card-title').forEach(el => el.contentEditable = on ? 'true' : 'false');
   }
 }
 
-// --- DELETE ---
+// ===== DELETE =====
 function delItem(btn) {
   const target = btn.closest('.tl-item, .info-row, .check-item, .check-group, .emg-item, .memo-card');
   if (target && confirm('削除しますか？')) target.remove();
 }
 
-// --- ADD TIMELINE ITEM ---
+// ===== ADD TIMELINE ITEM =====
 function addTlItem(tlId) {
   const tl = document.getElementById(tlId);
   const on = editStates['schedule'];
@@ -593,7 +532,7 @@ function addTlItem(tlId) {
   item.querySelector('.tl-title').focus();
 }
 
-// --- ADD INFO ROW ---
+// ===== ADD INFO ROW =====
 function addInfoRow(containerId) {
   const c = document.getElementById(containerId);
   const tab = c.closest('.section').id.replace('tab-','');
@@ -605,9 +544,9 @@ function addInfoRow(containerId) {
   row.querySelector('.info-label').focus();
 }
 
-// --- ADD CHECK ITEM ---
+// ===== ADD CHECK ITEM =====
 function addCheckItem(group) {
-  const tab = 'checklist'; const on = editStates[tab];
+  const on = editStates['checklist'];
   const addBtn = group.querySelector('.add-btn');
   const item = document.createElement('div');
   item.className = 'check-item';
@@ -616,10 +555,10 @@ function addCheckItem(group) {
   item.querySelector('label').focus();
 }
 
-// --- ADD CHECK GROUP ---
+// ===== ADD CHECK GROUP =====
 function addCheckGroup() {
   const on = editStates['checklist'];
-  const container = document.getElementById('checklist-card');
+  const container = document.getElementById('checklist-body');
   const addGroupBtn = document.getElementById('add-group-btn');
   const group = document.createElement('div');
   group.className = 'check-group';
@@ -628,10 +567,10 @@ function addCheckGroup() {
   group.querySelector('.check-group-title').focus();
 }
 
-// --- ADD EMG ROW ---
+// ===== ADD EMG ROW =====
 function addEmgRow(containerId) {
   const c = document.getElementById(containerId);
-  const tab = 'info'; const on = editStates[tab];
+  const on = editStates['info'];
   const row = document.createElement('div');
   row.className = 'emg-item';
   row.innerHTML = `<div><div style="font-size:0.8rem;" contenteditable="${on}">名前</div><div class="emg-label-s" contenteditable="${on}">メモ</div></div><div class="emg-val" contenteditable="${on}">値</div><button class="del-btn" onclick="delItem(this)" style="position:static;display:${on?'block':'none'}">🗑️</button>`;
@@ -639,7 +578,7 @@ function addEmgRow(containerId) {
   row.querySelector('[contenteditable]').focus();
 }
 
-// --- ADD MEMO CARD ---
+// ===== ADD MEMO CARD =====
 function addMemoCard() {
   const on = editStates['memo'];
   const container = document.getElementById('memo-container');
@@ -650,33 +589,28 @@ function addMemoCard() {
   container.appendChild(card);
 }
 
-// --- CHECKBOX ---
+// ===== CHECKBOX =====
 function toggleCheck(cb) {
   cb.closest('.check-item').classList.toggle('checked', cb.checked);
 }
 
-// --- MAP ---
+// ===== MAP =====
 function initMap() {
   window.mapInit = true;
-  const map = L.map('map').setView([34.98,135.73],10);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors'}).addTo(map);
-  const spots=[
-    {lat:34.6443,lng:135.0156,label:'神戸・垂水（出発地）',color:'#888',day:'出発地'},
-    {lat:35.0036,lng:135.7556,label:'ホテルマイステイズ京都四条',color:'#e07820',day:'1日目 宿泊'},
-    {lat:35.0114,lng:135.7824,label:'京都市京セラ美術館',color:'#b04010',day:'2日目 どろぼう展'},
-    {lat:35.0031,lng:135.7714,label:'Nintendo KYOTO（髙島屋T8 7F）',color:'#b04010',day:'2日目'},
-    {lat:35.0116,lng:135.7581,label:'ホテルモントレ京都',color:'#e07820',day:'2日目 宿泊'},
-    {lat:35.0066,lng:135.7540,label:'京都駅',color:'#888',day:'2日目 帰宅出発点'},
-    {lat:34.9380,lng:135.7014,label:'ニンテンドーミュージアム',color:'#4a7040',day:'3日目 メインイベント'},
-  ];
-  spots.forEach(s=>{
-    const icon=L.divIcon({html:`<div style="width:13px;height:13px;border-radius:50%;background:${s.color};border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.3)"></div>`,className:'',iconSize:[13,13],iconAnchor:[6,6]});
+  const d = TABINO_DATA.map;
+  const map = L.map('map').setView(d.center, d.zoom);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: '© OpenStreetMap contributors'}).addTo(map);
+  d.spots.forEach(s => {
+    const icon = L.divIcon({html:`<div style="width:13px;height:13px;border-radius:50%;background:${s.color};border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.3)"></div>`,className:'',iconSize:[13,13],iconAnchor:[6,6]});
     L.marker([s.lat,s.lng],{icon}).addTo(map).bindPopup(`<strong>${s.label}</strong><br><small>${s.day}</small>`);
   });
-  L.polyline([[34.6443,135.0156],[35.0036,135.7556]],{color:'#7a4810',weight:2.5,dashArray:'6,4',opacity:0.7}).addTo(map);
-  L.polyline([[35.0036,135.7556],[35.0116,135.7581],[35.0114,135.7824],[35.0031,135.7714]],{color:'#b04010',weight:2,dashArray:'4,4',opacity:0.6}).addTo(map);
-  L.polyline([[35.0116,135.7581],[34.9380,135.7014],[34.6443,135.0156]],{color:'#4a7040',weight:2.5,dashArray:'6,4',opacity:0.7}).addTo(map);
+  d.routes.forEach(r => {
+    L.polyline(r.points, {color:r.color,weight:r.weight,dashArray:'6,4',opacity:0.7}).addTo(map);
+  });
 }
+
+// ===== INIT =====
+renderAll();
 </script>
 </body>
 </html>
