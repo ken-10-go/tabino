@@ -8,23 +8,6 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;600&family=Zen+Maru+Gothic:wght@700&display=swap');
 </style>
-<style>
-#lock-screen{position:fixed;inset:0;background:var(--brown);z-index:9999;display:flex;align-items:center;justify-content:center;}
-.lock-box{background:var(--cream);border-radius:16px;padding:2rem 1.8rem;width:min(320px,90vw);text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.3);}
-.lock-icon{font-size:2.2rem;margin-bottom:0.5rem;}
-.lock-title{font-family:'Noto Serif JP',serif;font-size:1.2rem;font-weight:600;color:var(--brown-dark);margin-bottom:0.3rem;}
-.lock-sub{font-size:0.78rem;color:var(--gray);margin-bottom:1.2rem;}
-.lock-input{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:0.6rem 0.8rem;font-size:1rem;font-family:'Noto Sans JP',sans-serif;color:var(--text);background:white;outline:none;text-align:center;letter-spacing:0.15em;}
-.lock-input:focus{border-color:var(--orange);}
-.lock-btn{margin-top:0.8rem;width:100%;background:var(--brown);color:var(--cream);border:none;border-radius:8px;padding:0.65rem;font-size:0.9rem;font-family:'Noto Sans JP',sans-serif;cursor:pointer;}
-.lock-btn:hover{background:var(--brown-dark);}
-.lock-btn:disabled{background:#bbb;cursor:not-allowed;}
-.lock-error{font-size:0.78rem;color:var(--terra);margin-top:0.6rem;min-height:1.2em;}
-.lock-attempts{font-size:0.73rem;color:var(--gray);margin-top:0.4rem;}
-.lock-input-wrap{position:relative;margin-top:0;}
-.lock-input-wrap .lock-input{padding-right:2.4rem;}
-.lock-eye{position:absolute;right:0.6rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--gray);line-height:1;}
-</style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" crossorigin="anonymous">
 <style>
 :root{
@@ -153,24 +136,6 @@ h1[contenteditable="true"],h2[contenteditable="true"]{display:block;}
 </head>
 <body>
 
-<div id="lock-screen">
-  <div class="lock-box">
-    <div class="lock-icon">🔒</div>
-    <div class="lock-title">旅のしおり</div>
-    <div class="lock-sub">パスワードを入力してください</div>
-    <form id="lock-form" onsubmit="unlock();return false;" autocomplete="on">
-      <input type="text" name="username" value="tabino" autocomplete="username" style="display:none;">
-      <div class="lock-input-wrap">
-        <input class="lock-input" id="lock-input" type="password" name="password"
-          placeholder="••••••••" maxlength="32" autocomplete="current-password">
-        <button type="button" class="lock-eye" onclick="togglePw()" id="lock-eye">👁️</button>
-      </div>
-      <button class="lock-btn" type="submit">開く</button>
-    </form>
-    <div class="lock-error" id="lock-error"></div>
-    <div class="lock-attempts" id="lock-attempts"></div>
-  </div>
-</div>
 
 <div class="cover">
   <div class="cover-inner">
@@ -286,48 +251,6 @@ h1[contenteditable="true"],h2[contenteditable="true"]{display:block;}
 
 <script src="data.js"></script>
 <script>
-// ===== PASSWORD TOGGLE =====
-function togglePw() {
-  const input = document.getElementById('lock-input');
-  const eye = document.getElementById('lock-eye');
-  if (input.type === 'password') {
-    input.type = 'text';
-    eye.textContent = '🙈';
-  } else {
-    input.type = 'password';
-    eye.textContent = '👁️';
-  }
-}
-
-// ===== AUTH =====
-const PASS_HASH = 'b5322326e9fc899bcfc0cfac731f0b987a3805fcfcb77409562abd6f02ac89be';
-const SALT = 'gotocoffee2025';
-let attempts = 0, lockUntil = 0;
-
-async function unlock() {
-  const now = Date.now();
-  if (now < lockUntil) {
-    const s = Math.ceil((lockUntil - now) / 1000);
-    document.getElementById('lock-error').textContent = `ロック中 — あと${s}秒`;
-    return;
-  }
-  const pw = document.getElementById('lock-input').value;
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(SALT + pw));
-  const hash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
-  if (hash === PASS_HASH) {
-    document.getElementById('lock-screen').style.display = 'none';
-    attempts = 0;
-  } else {
-    attempts++;
-    if (attempts >= 5) {
-      lockUntil = Date.now() + 60000;
-      attempts = 0;
-      document.getElementById('lock-error').textContent = 'パスワードが違います（1分間ロック）';
-    } else {
-      document.getElementById('lock-error').textContent = `パスワードが違います（残り${5 - attempts}回）`;
-    }
-  }
-}
 
 // ===== RENDER =====
 function renderAll() {
