@@ -366,9 +366,9 @@ function makeTlItem(item) {
   html += `<div class="tl-time" contenteditable="false">${item.time}</div>`;
   html += `<div class="tl-title" contenteditable="false">${item.title}</div>`;
   if (item.desc) html += `<div class="tl-desc" contenteditable="false">${item.desc}</div>`;
-  if (item.transport) html += `<div class="transport">${item.transport}</div>`;
-  if (item.note) html += `<div class="tl-note">${item.note}</div>`;
-  if (item.info) html += `<div class="tl-info">${item.info}</div>`;
+  if (item.transport) html += `<div class="transport" contenteditable="false">${item.transport}</div>`;
+  if (item.note) html += `<div class="tl-note" contenteditable="false">${item.note}</div>`;
+  if (item.info) html += `<div class="tl-info" contenteditable="false">${item.info}</div>`;
   div.innerHTML = html;
   return div;
 }
