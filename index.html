@@ -6,7 +6,7 @@
 <title>旅のしおり</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;600&family=Zen+Maru+Gothic:wght@700&display=swap');
 </style>
 <style>
 #lock-screen{position:fixed;inset:0;background:var(--brown);z-index:9999;display:flex;align-items:center;justify-content:center;}
@@ -30,13 +30,13 @@
   --orange:#e07820;--gray:#888;--text:#2a1800;--border:#d4b880;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Noto Sans JP',sans-serif;background:var(--cream);color:var(--text);font-size:14px;line-height:1.7;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--cream);color:var(--text);font-size:16px;line-height:1.7;}
 
 .cover{background:var(--brown);color:var(--cream);padding:2rem 2rem 1.8rem;text-align:center;position:relative;overflow:hidden;}
 .cover::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(255,255,255,0.03) 20px,rgba(255,255,255,0.03) 40px);}
 .cover-inner{position:relative;z-index:1;}
 .cover-icon{font-size:2.2rem;margin-bottom:0.4rem;}
-.cover h1{font-family:'Noto Serif JP',serif;font-size:1.7rem;font-weight:600;letter-spacing:0.1em;margin-bottom:0.2rem;}
+.cover h1{font-family:'Zen Maru Gothic',sans-serif;font-size:1.7rem;font-weight:700;letter-spacing:0.1em;margin-bottom:0.2rem;}
 .cover-sub{font-size:0.88rem;opacity:0.8;margin-bottom:0.8rem;}
 .cover-meta{display:flex;justify-content:center;gap:1.2rem;font-size:0.8rem;opacity:0.9;flex-wrap:wrap;}
 
@@ -178,7 +178,7 @@ h1[contenteditable="true"],h2[contenteditable="true"]{display:block;}
 <div class="nav-tabs">
   <button class="tab-btn active" onclick="showTab('schedule',this)">📋 日程</button>
   <button class="tab-btn" onclick="showTab('map',this)">🗺️ 地図</button>
-  <button class="tab-btn" onclick="showTab('hotel',this)">🏨 宿泊</button>
+  <button class="tab-btn" onclick="showTab('hotel',this)">🏨 予約情報</button>
   <button class="tab-btn" onclick="showTab('checklist',this)">☑️ 持ち物</button>
   <button class="tab-btn" onclick="showTab('info',this)">📞 連絡先</button>
   <button class="tab-btn" onclick="showTab('memo',this)">📝 メモ</button>
