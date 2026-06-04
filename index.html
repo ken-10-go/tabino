@@ -501,7 +501,36 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--cream);color:var(--t
 </div>
 
 <script>
-  <div class="cover-inner">
+const PASS_HASH = 'b5322326e9fc899bcfc0cfac731f0b987a3805fcfcb77409562abd6f02ac89be';
+const SALT = 'gotocoffee2025';
+let attempts = 0, lockUntil = 0;
+
+async function unlock() {
+  const now = Date.now();
+  if (now < lockUntil) {
+    const s = Math.ceil((lockUntil - now) / 1000);
+    document.getElementById('lock-error').textContent = `ロック中 — あと${s}秒`;
+    return;
+  }
+  const pw = document.getElementById('lock-input').value;
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(SALT + pw));
+  const hash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+  if (hash === PASS_HASH) {
+    document.getElementById('lock-screen').style.display = 'none';
+    attempts = 0;
+  } else {
+    attempts++;
+    if (attempts >= 5) {
+      lockUntil = Date.now() + 60000;
+      attempts = 0;
+      document.getElementById('lock-error').textContent = 'パスワードが違います（1分間ロック）';
+    } else {
+      document.getElementById('lock-error').textContent = `パスワードが違います（残り${5 - attempts}回）`;
+    }
+    document.getElementById('lock-attempts').textContent = '';
+  }
+}
+
 function showTab(id, btn) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
