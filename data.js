@@ -1,3 +1,5 @@
+const TABINO_VERSION = '1';
+
 const TABINO_DATA = {
   cover: {
     icon: '🗺️',
